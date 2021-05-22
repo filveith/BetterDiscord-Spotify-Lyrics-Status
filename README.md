@@ -1,0 +1,1 @@
+# BetterDiscord-Spotify-Lyrics-Status
