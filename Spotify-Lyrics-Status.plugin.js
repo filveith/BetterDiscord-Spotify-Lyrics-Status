@@ -1,7 +1,7 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author nous
- * @version 0.1.2
+ * @version 0.1.3
  * @description Change your status to the lyrics of the music you a listening to
  * @website https://github.com/filveith
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
@@ -16,7 +16,7 @@
 		 "info": {
 			 "name": "Spotify-Lyrics-Status",
 			 "author": "nous",
-			 "version": "0.1.2",
+			 "version": "0.1.3",
 			 "description": "Change your status to the lyrics of the music your a listening to"
 		 },
 		 "changeLog": {
