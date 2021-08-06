@@ -196,5 +196,5 @@
 })();
 
 
-//TODO Parametre avec ou sans emoji quand afficher paroles
+//TODO Parametre avec ou sans emoji quand afficher les paroles
 //TODO Parametre si unset ou set message (selon utilisateur)
