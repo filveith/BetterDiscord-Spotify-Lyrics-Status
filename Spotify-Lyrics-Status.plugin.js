@@ -5,6 +5,7 @@
  * @description Change your status to the lyrics of the music you a listening to
  * @website https://github.com/filveith
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js?token=ATY7NEUY5VDV52AP5JT2VW3BBSMNM
  */
 
  module.exports = (_ => {
@@ -115,14 +116,12 @@
                     try {
                         let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
                         if (song) {
-                            songIsPlaying = true
                             cleared = false
                             this.getSpotifyToken();
-                        } else {
-                            if(!songIsPlaying && !cleared) {
-                                Status.unset();
-                                cleared = true;
-                            }
+                        } else if (!song && !cleared) {
+                            Status.unset();
+                            cleared = true;
+                            Status.unset();
                         }
                     } catch (error) { }
                 }, 1000);
@@ -146,8 +145,6 @@
                                 let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
                             });
                         }
-
-
 
                         const getLyrics = async () => {
                             try {
@@ -173,7 +170,7 @@
                                 }
 
                                 //CHANGES THE STATUS TO THE CURRENT LYRICS
-                                Status.set("🎵 " + currentLyrics[currentPositionLyrics].lyrics + " 🎵")
+                                Status.set("🎵 " + currentLyrics[currentPositionLyrics].lyrics + " 🎵"); //TODO Parametre avec ou sans emoji quand afficher paroles
 
                                 oldSong = requestResult.item.id;
 
@@ -196,3 +193,7 @@
         };
     })(window.BDFDB_Global.PluginUtils.buildPlugin(config));
 })();
+
+
+//TODO Parametre avec ou sans emoji quand afficher paroles
+//TODO Parametre si unset ou set message (selon utilisateur)
