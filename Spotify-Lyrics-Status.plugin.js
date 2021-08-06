@@ -119,6 +119,7 @@
                             cleared = false
                             this.getSpotifyToken();
                         } else if (!song && !cleared) {
+                            BDFDB.NotificationUtils.toast("TEST")
                             Status.unset();
                             cleared = true;
                             Status.unset();
