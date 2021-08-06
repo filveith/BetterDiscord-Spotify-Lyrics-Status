@@ -3,8 +3,8 @@
  * @author Robin & Fil & Tom
  * @version 0.1.5
  * @description Change your status to the lyrics of the music you a listening to on spotify
- * @website https://github.com/filveith
- * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
+ * @website https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
+ * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status/blob/master/Spotify-Lyrics-Status.plugin.js
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
