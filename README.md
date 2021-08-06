@@ -1,3 +1,5 @@
 # BetterDiscord-Spotify-Lyrics-Status
 
-Plugin for better-discord. It changes your status to the lyrics of the song you are currently listening on spotify
+Plugin for BetterDiscord. 
+This plugin syncronises your Discord status message with your Spotify song lyrics in real time.
+❗ MUST HAVE SPOTIFY CONNECTED TO DISCORD ❗
