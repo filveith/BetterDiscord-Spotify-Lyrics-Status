@@ -341,9 +341,6 @@
  
                  settings.appendChild(GUI.newDivider());
  
- 
- 
- 
                  //SAVE BUTTON + SAVE IN JSON FILE
                  let saveButton = GUI.setSuggested(GUI.newButton("Save", true));
                  saveButton.title = "Save the current state";
