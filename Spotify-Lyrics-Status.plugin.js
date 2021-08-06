@@ -1,8 +1,8 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Robin & Fil & Tom
- * @version 0.1.3
- * @description Change your status to the lyrics of the music you a listening to
+ * @version 0.1.5
+ * @description Change your status to the lyrics of the music you a listening to on spotify
  * @website https://github.com/filveith
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js?token=ATY7NEUY5VDV52AP5JT2VW3BBSMNM
@@ -13,13 +13,13 @@
         "info": {
             "name": "Spotify-Lyrics-Status",
             "author": "Robin & Fil & Tom",
-            "version": "0.1.3",
+            "version": "0.1.5",
             "description": "Change your status to the lyrics of the music your a listening to"
         },
         "changeLog": {
             "improved": {
                 "Working": "And that's something",
-                "New": "Remove status when music paused"
+                "Added": "You can choose the emojis and default status"
             }
         }
     };
@@ -81,7 +81,6 @@
             return label;
         },
 
-        // TODO: consider using margin / padding over minheight and width (or the appropriate html element)
         newDivider: (size = "15px") => {
             let divider = document.createElement("div");
             divider.style.minHeight = size;
@@ -185,7 +184,7 @@
                             cleared = false
                             this.getSpotifyToken();
                         } else if (!song && !cleared) {
-                            Status.set(this.getData("Default"));
+                            Status.set(this.getData("noMusic"));
                             cleared = true;
                         }
                     } catch (error) { }
@@ -264,7 +263,7 @@
                                         Status.set("Error...");
                                     }
                                 } catch (error) {
-                                    Status.set(this.getData("Default"));
+                                    Status.set(this.getData("noLyrics"));
                                 }
                             }
                         }
@@ -273,26 +272,16 @@
                 })
             }
 
-            // x2 cases emoji, si rien met rien
-            // pas de music/pas de paroles
             getSettingsPanel(collapseStates = {}) {
 
                 let settings = document.createElement("div");
                 settings.style.padding = "10px";
 
-                //emojiZone.appendChild(GUI.newLabel("Emojis"));
-                
-                //EMOJI ZONE FOR BOTH TEXT BOX
-                //settings.appendChild(GUI.newLabel('Emojis'));
-
-                //settings.appendChild(GUI.newDivider());
-
                 let emojiZone = GUI.newHBox();
                 emojiZone.style.marginLeft = "22%";
-                //emojiZone.style.marginRight = "10%";
                 emojiZone.style.marginTop = this.kSpacing;
                 settings.appendChild(emojiZone);
-                
+
                 //EMOJI AT THE START OF THE STATUS
                 let sEmojiBox = GUI.newInput();
                 sEmojiBox.title = "The emoji before the lyrics"
@@ -305,9 +294,9 @@
                 fakeLyrics.style.fontSize = "15px";
                 fakeLyrics.style.color = "white";
                 fakeLyrics.style.fontStyle = "italic";
-                fakeLyrics.style.marginLeft= "10px";
-                fakeLyrics.style.marginTop= "11px";
-                fakeLyrics.style.marginRight= "10px";
+                fakeLyrics.style.marginLeft = "10px";
+                fakeLyrics.style.marginTop = "11px";
+                fakeLyrics.style.marginRight = "10px";
                 emojiZone.appendChild(fakeLyrics)
 
                 //EMOJI AT THE END OF THE STATUS
@@ -319,31 +308,40 @@
                 eEmojiBox.value = this.getData("eEmoji")
                 emojiZone.appendChild(eEmojiBox);
 
-
                 settings.appendChild(GUI.newDivider());
 
                 //DEFAULT TEXT WHEN NO MUSIC PALYING
-                settings.appendChild(GUI.newLabel("Default"));
-                let defaultBox = GUI.newInput();
-                defaultBox.value = String(this.getData("Default"));
-                defaultBox.style.marginBottom = this.kSpacing;
-                defaultBox.placeholder = "Set Emoji here!"
-                settings.appendChild(defaultBox);
+                settings.appendChild(GUI.newLabel("No music status"));
+                let noMusicBox = GUI.newInput();
+                noMusicBox.value = String(this.getData("noMusic"));
+                noMusicBox.style.marginBottom = this.kSpacing;
+                noMusicBox.placeholder = "No music status!"
+                settings.appendChild(noMusicBox);
 
                 settings.appendChild(GUI.newDivider());
 
-                
+                //DEFAULT TEXT WHEN NO LYRICS AVAILABLE
+                settings.appendChild(GUI.newLabel("No lyrics status"));
+                let noLyricsBox = GUI.newInput();
+                noLyricsBox.value = String(this.getData("noLyircs"));
+                noLyricsBox.style.marginBottom = this.kSpacing;
+                noLyricsBox.placeholder = "No lyrics status!"
+                settings.appendChild(noLyricsBox);
+
+                settings.appendChild(GUI.newDivider());
+
                 //SAVE BUTTON + SAVE IN JSON FILE
                 let saveButton = GUI.setSuggested(GUI.newButton("Save", true));
                 saveButton.title = "Save the current state";
                 saveButton.onclick = () => {
                     try {
-                        this.setData("sEmoji", sEmojiBox.value)
-                        this.setData("eEmoji", eEmojiBox.value)
-                        this.setData("Default", defaultBox.value)
-                        BdApi.showToast("Settings were saved!", {type: "success"});
+                        this.setData("sEmoji", sEmojiBox.value == undefined ? sEmojiBox.value == " " : sEmojiBox.value)
+                        this.setData("eEmoji", eEmojiBox.value == undefined ? eEmojiBox.value == " " : eEmojiBox.value)
+                        this.setData("noMusic", noMusicBox.value == undefined ? noMusicBox.value == " " : noMusicBox.value)
+                        this.setData("noLyircs", noLyricsBox.value == undefined ? noLyricsBox.value == " " : noLyricsBox.value)
+                        BdApi.showToast("Settings were saved!", { type: "success" });
                     } catch (error) {
-                        //BDFDB.NotificationUtils.toast("error = "+error);
+                        BdApi.showToast("Error while saving!", { type: "error" });
                     }
                 }
                 settings.appendChild(saveButton)
