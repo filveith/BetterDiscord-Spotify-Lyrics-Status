@@ -65,6 +65,8 @@
         }
     };
 
+    var currentLyrics, cleared = false, songIsPlaying = false, oldSong = " "
+
     return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
         getName() { return config.info.name; }
         getAuthor() { return config.info.author; }
@@ -113,9 +115,14 @@
                     try {
                         let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
                         if (song) {
+                            songIsPlaying = true
+                            cleared = false
                             this.getSpotifyToken();
                         } else {
-                            Status.unset();
+                            if(!songIsPlaying && !cleared) {
+                                Status.unset();
+                                cleared = true;
+                            }
                         }
                     } catch (error) { }
                 }, 1000);
@@ -140,16 +147,21 @@
                             });
                         }
 
-                        var requestResult = JSON.parse(result)
-                        var songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
-                        var artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
-                        var url = ('https://api.textyl.co/api/lyrics?q=' + artistNameFormated + '%20' + songNameFormated)
-                        var currentLyrics, currentTimeInSong, currentPositionLyrics
+
 
                         const getLyrics = async () => {
                             try {
-                                //GET A JSON FILE WITH THE LYRICS FROM textyl.com
-                                currentLyrics = (await (await fetch(url)).json());
+                                var requestResult = JSON.parse(result)
+                                var songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
+                                var artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
+                                var url = ('https://api.textyl.co/api/lyrics?q=' + artistNameFormated + '%20' + songNameFormated)
+                                var currentTimeInSong, currentPositionLyrics
+
+                                if (requestResult.item.id != oldSong) {
+                                    //GET A JSON FILE WITH THE LYRICS FROM textyl.com
+                                    currentLyrics = (await (await fetch(url)).json());
+                                }
+
 
                                 //GET THE CURRENT POSITION IN THE SONG
                                 currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
@@ -161,7 +173,9 @@
                                 }
 
                                 //CHANGES THE STATUS TO THE CURRENT LYRICS
-                                Status.set(currentLyrics[currentPositionLyrics].lyrics)
+                                Status.set("🎵 " + currentLyrics[currentPositionLyrics].lyrics + " 🎵")
+
+                                oldSong = requestResult.item.id;
 
                             } catch (error) {
                                 try {
