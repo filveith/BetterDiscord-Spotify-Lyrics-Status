@@ -1,6 +1,6 @@
 /**
  * @name Spotify-Lyrics-Status
- * @author nous
+ * @author Robin & Fil & Tom
  * @version 0.1.3
  * @description Change your status to the lyrics of the music you a listening to
  * @website https://github.com/filveith
@@ -66,7 +66,72 @@
         }
     };
 
-    var currentLyrics, cleared = false, songIsPlaying = false, oldSong = " "
+    const GUI = {
+        newInput: (text = "") => {
+            let input = document.createElement("input");
+            input.className = "inputDefault-_djjkz input-cIJ7To";
+            input.innerText = text;
+            return input;
+        },
+
+        newLabel: (text) => {
+            let label = document.createElement("h5");
+            label.className = "h5-18_1nd";
+            label.innerText = text;
+            return label;
+        },
+
+        // TODO: consider using margin / padding over minheight and width (or the appropriate html element)
+        newDivider: (size = "15px") => {
+            let divider = document.createElement("div");
+            divider.style.minHeight = size;
+            divider.style.minWidth = size;
+            return divider;
+        },
+
+        newTextarea: () => {
+            let textarea = document.createElement("textarea");
+            textarea.className = "input-cIJ7To scrollbarGhostHairline-1mSOM1";
+            textarea.style.resize = "vertical";
+            textarea.rows = 4;
+            return textarea;
+        },
+
+        newButton: (text, filled = true) => {
+            let button = document.createElement("button");
+            button.className = "button-38aScr colorBrand-3pXr91 sizeSmall-2cSMqn grow-q77ONN";
+            if (filled) button.classList.add("lookFilled-1Gx00P");
+            else button.classList.add("lookOutlined-3sRXeN");
+            button.innerText = text;
+            return button;
+        },
+
+        newHBox: () => {
+            let hbox = document.createElement("div");
+            hbox.style.display = "flex";
+            hbox.style.flexDirection = "row";
+            return hbox;
+        },
+
+        setExpand: (element, value) => {
+            element.style.flexGrow = value;
+            return element;
+        },
+
+        setSuggested: (element, value = true) => {
+            if (value) element.classList.add("colorGreen-29iAKY");
+            else element.classList.remove("mystyle");
+            return element;
+        },
+
+        setDestructive: (element, value = true) => {
+            if (value) element.classList.add("colorRed-1TFJan");
+            else element.classList.remove("colorRed-1TFJan");
+            return element;
+        }
+    };
+
+    var currentLyrics, cleared = false, oldSong = " "
 
     return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
         getName() { return config.info.name; }
@@ -107,6 +172,7 @@
         }
 
     } : (([Plugin, BDFDB]) => {
+
         return class SpotifyToken extends Plugin {
 
             onLoad() { }
@@ -119,16 +185,22 @@
                             cleared = false
                             this.getSpotifyToken();
                         } else if (!song && !cleared) {
-                            BDFDB.NotificationUtils.toast("TEST")
-                            Status.unset();
+                            Status.set(this.getData("Default"));
                             cleared = true;
-                            Status.unset();
                         }
                     } catch (error) { }
                 }, 1000);
             }
 
             onStop() { BDFDB.TimeUtils.clear(updateInterval); }
+
+            setData(key, value) {
+                BdApi.setData(this.getName(), key, value);
+            }
+
+            getData(key) {
+                return BdApi.getData(this.getName(), key);
+            }
 
             getSpotifyToken() {
 
@@ -170,9 +242,18 @@
                                     }
                                 }
 
-                                //CHANGES THE STATUS TO THE CURRENT LYRICS
-                                Status.set("🎵 " + currentLyrics[currentPositionLyrics].lyrics + " 🎵"); //TODO Parametre avec ou sans emoji quand afficher paroles
+                                //GETs THE SAVED EMOJIS FROM THE JSON FILE
+                                var sEmoji = this.getData("sEmoji")
+                                var eEmoji = this.getData("eEmoji")
 
+                                if (requestResult.item.album.artists[0].name == "Gloryhammer") {
+                                    sEmoji = "🤘"
+                                    eEmoji = "🤘"
+                                }
+
+                                Status.set(sEmoji + " " + currentLyrics[currentPositionLyrics].lyrics + " " + eEmoji); //TODO Parametre avec ou sans emoji quand afficher paroles
+
+                                //CHANGES oldSong TO THE SONG CURRENTLY PLAYING
                                 oldSong = requestResult.item.id;
 
                             } catch (error) {
@@ -183,7 +264,7 @@
                                         Status.set("Error...");
                                     }
                                 } catch (error) {
-                                    Status.unset();
+                                    Status.set(this.getData("Default"));
                                 }
                             }
                         }
@@ -191,10 +272,84 @@
                     });
                 })
             }
+
+            // x2 cases emoji, si rien met rien
+            // pas de music/pas de paroles
+            getSettingsPanel(collapseStates = {}) {
+
+                let settings = document.createElement("div");
+                settings.style.padding = "10px";
+
+                //emojiZone.appendChild(GUI.newLabel("Emojis"));
+                
+                //EMOJI ZONE FOR BOTH TEXT BOX
+                //settings.appendChild(GUI.newLabel('Emojis'));
+
+                //settings.appendChild(GUI.newDivider());
+
+                let emojiZone = GUI.newHBox();
+                emojiZone.style.marginLeft = "22%";
+                //emojiZone.style.marginRight = "10%";
+                emojiZone.style.marginTop = this.kSpacing;
+                settings.appendChild(emojiZone);
+                
+                //EMOJI AT THE START OF THE STATUS
+                let sEmojiBox = GUI.newInput();
+                sEmojiBox.title = "The emoji before the lyrics"
+                sEmojiBox.value = String(this.getData("sEmoji"));
+                sEmojiBox.style.width = "11%";
+                sEmojiBox.placeholder = "First Emoji here!"
+                emojiZone.appendChild(sEmojiBox);
+
+                let fakeLyrics = GUI.newLabel('Never gonna give you up...');
+                fakeLyrics.style.fontSize = "15px";
+                fakeLyrics.style.color = "white";
+                fakeLyrics.style.fontStyle = "italic";
+                fakeLyrics.style.marginLeft= "10px";
+                fakeLyrics.style.marginTop= "11px";
+                fakeLyrics.style.marginRight= "10px";
+                emojiZone.appendChild(fakeLyrics)
+
+                //EMOJI AT THE END OF THE STATUS
+                let eEmojiBox = GUI.newInput();
+                eEmojiBox.title = "The emoji after the lyrics"
+                eEmojiBox.value = String(this.getData("eEmoji"));
+                eEmojiBox.style.width = "11%";
+                eEmojiBox.placeholder = "Last Emoji here!"
+                eEmojiBox.value = this.getData("eEmoji")
+                emojiZone.appendChild(eEmojiBox);
+
+
+                settings.appendChild(GUI.newDivider());
+
+                //DEFAULT TEXT WHEN NO MUSIC PALYING
+                settings.appendChild(GUI.newLabel("Default"));
+                let defaultBox = GUI.newInput();
+                defaultBox.value = String(this.getData("Default"));
+                defaultBox.style.marginBottom = this.kSpacing;
+                defaultBox.placeholder = "Set Emoji here!"
+                settings.appendChild(defaultBox);
+
+                settings.appendChild(GUI.newDivider());
+
+                
+                //SAVE BUTTON + SAVE IN JSON FILE
+                let saveButton = GUI.setSuggested(GUI.newButton("Save", true));
+                saveButton.title = "Save the current state";
+                saveButton.onclick = () => {
+                    try {
+                        this.setData("sEmoji", sEmojiBox.value)
+                        this.setData("eEmoji", eEmojiBox.value)
+                        this.setData("Default", defaultBox.value)
+                        BdApi.showToast("Settings were saved!", {type: "success"});
+                    } catch (error) {
+                        //BDFDB.NotificationUtils.toast("error = "+error);
+                    }
+                }
+                settings.appendChild(saveButton)
+
+                return settings
+            }
         };
     })(window.BDFDB_Global.PluginUtils.buildPlugin(config));
 })();
-
-
-//TODO Parametre avec ou sans emoji quand afficher les paroles
-//TODO Parametre si unset ou set message (selon utilisateur)
