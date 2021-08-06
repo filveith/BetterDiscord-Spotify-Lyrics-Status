@@ -5,7 +5,7 @@
  * @description Change your status to the lyrics of the music you a listening to on spotify
  * @website https://github.com/filveith
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
- * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js?token=ATY7NEUY5VDV52AP5JT2VW3BBSMNM
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
  module.exports = (_ => {
@@ -14,11 +14,10 @@
             "name": "Spotify-Lyrics-Status",
             "author": "Robin & Fil & Tom",
             "version": "0.1.5",
-            "description": "Change your status to the lyrics of the music your a listening to"
+            "description": "Change your discord status to the lyrics of the music your a listening to on Spotify"
         },
         "changeLog": {
             "improved": {
-                "Working": "And that's something",
                 "Added": "You can choose the emojis and default status"
             }
         }
