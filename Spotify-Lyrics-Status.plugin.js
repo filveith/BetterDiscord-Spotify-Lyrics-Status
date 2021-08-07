@@ -1,7 +1,7 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Robin & Fil & Tom
- * @version 0.1.6
+ * @version 0.1.7
  * @description Change your status to the lyrics of the music you a listening to on spotify
  * @website https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status/blob/master/Spotify-Lyrics-Status.plugin.js
@@ -15,8 +15,10 @@
          "info": {
              "name": "Spotify-Lyrics-Status",
              "author": "Robin & Fil & Tom",
-             "version": "0.1.6",
-             "description": "Change your discord status to the lyrics of the music your a listening to on Spotify"
+             "version": "0.1.7",
+             "description": "Change your discord status to the lyrics of the music your a listening to on Spotify",
+             "github": "https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status",
+             "github_raw": "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js"
          },
          "changeLog": {
              "improved": {
@@ -113,6 +115,21 @@
              return hbox;
          },
  
+         newHyperlink: (mainText="", linkText, url, hover = "") => {
+             let linkTextE = document.createElement("a");
+             linkTextE.style.display = "flex";
+             linkTextE.style.flexDirection = "row";
+             linkTextE.innerText = linkText;
+             linkTextE.href = url
+             linkTextE.title = hover
+ 
+             let mainTextE = GUI.newLabel(mainText);
+ 
+             mainTextE.appendChild(linkTextE)
+ 
+             return mainTextE;
+         },
+ 
          setExpand: (element, value) => {
              element.style.flexGrow = value;
              return element;
@@ -188,10 +205,10 @@
                          this.setData("noLyrics", "")
                      }
                  } catch (error) {
-                     
+ 
                  }
  
-                 updateInterval = BDFDB.TimeUtils.interval(_ => {
+                 this.interval = setInterval(() => {
                      try {
                          let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
                          if (song) {
@@ -199,14 +216,17 @@
                              this.getSpotifyToken();
                          } else if (!song && !cleared) {
                              var noMusicData = this.getData("noMusic")
-                             Status.set( noMusicData == "" ? Status.unset() : noMusicData);
+                             Status.set(noMusicData == "" ? Status.unset() : noMusicData);
                              cleared = true;
                          }
                      } catch (error) { }
                  }, 1000);
              }
  
-             onStop() { BDFDB.TimeUtils.clear(updateInterval); }
+             onStop() {
+                 Status.unset()
+                 clearInterval(this.interval);
+             }
  
              setData(key, value) {
                  BdApi.setData(this.getName(), key, value);
@@ -235,6 +255,7 @@
  
                          const getLyrics = async () => {
                              try {
+ 
                                  var requestResult = JSON.parse(result)
                                  var songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
                                  var artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
@@ -244,6 +265,7 @@
                                  if (requestResult.item.id != oldSong) {
                                      //GET A JSON FILE WITH THE LYRICS FROM textyl.com
                                      currentLyrics = (await (await fetch(url)).json());
+                                     oldSong = requestResult.item.id;
                                  }
  
                                  //GET THE CURRENT POSITION IN THE SONG
@@ -259,22 +281,17 @@
                                  var sEmoji = this.getData("sEmoji")
                                  var eEmoji = this.getData("eEmoji")
  
-                                 Status.set(sEmoji + " " + currentLyrics[currentPositionLyrics].lyrics + " " + eEmoji); //TODO Parametre avec ou sans emoji quand afficher paroles
- 
-                                 //CHANGES oldSong TO THE SONG CURRENTLY PLAYING
-                                 oldSong = requestResult.item.id;
+                                 //CHANGES THE STATUS TO THE CURRENT LYRICS
+                                 Status.set(sEmoji + " " + currentLyrics[currentPositionLyrics].lyrics + " " + eEmoji);
  
                              } catch (error) {
-                                 try {
-                                     if (typeof (currentLyrics.length) == 'number') {
-                                         Status.unset()
-                                     } else {
-                                         var noLyricsData = this.getData("noLyrics")
-                                         Status.set( noLyricsData == "" ? Status.unset() : noLyricsData);
-                                     }
-                                 } catch (error) {
+                                 if (error == "TypeError: Failed to fetch") {
+                                     //NO LYRICS AVAILABLE
                                      var noLyricsData = this.getData("noLyrics")
-                                     Status.set( noLyricsData == "" ? Status.unset() : noLyricsData);
+                                     Status.set(noLyricsData == "" ? Status.unset() : noLyricsData);
+                                 } else {
+                                     //NO LYRICS AT THIS POINT IN THE SONG
+                                     Status.unset()
                                  }
                              }
                          }
@@ -341,13 +358,14 @@
  
                  settings.appendChild(GUI.newDivider());
  
+ 
                  //SAVE BUTTON + SAVE IN JSON FILE
                  let saveButton = GUI.setSuggested(GUI.newButton("Save", true));
                  saveButton.title = "Save the current state";
                  saveButton.onclick = () => {
                      try {
-                         sEmojiBox.value.length > 1 ? sEmojiBox.value = sEmojiBox.value.substring(0, 2) : sEmojiBox.value = sEmojiBox
-                         eEmojiBox.value.length > 1 ? eEmojiBox.value = eEmojiBox.value.substring(0, 2) : eEmojiBox.value = eEmojiBox
+                         sEmojiBox.value.length > 1 ? sEmojiBox.value = sEmojiBox.value.substring(0, 2) : sEmojiBox.value = sEmojiBox.value
+                         eEmojiBox.value.length > 1 ? eEmojiBox.value = eEmojiBox.value.substring(0, 2) : eEmojiBox.value = eEmojiBox.value
  
                          this.setData("sEmoji", sEmojiBox.value)
                          this.setData("eEmoji", eEmojiBox.value)
@@ -358,7 +376,15 @@
                          BdApi.showToast("Error while saving!", { type: "error" });
                      }
                  }
-                 settings.appendChild(saveButton)
+ 
+                 let saveEmojiBox = GUI.newHBox()
+                 saveEmojiBox.appendChild(saveButton)
+                 
+                 let emojiLink = GUI.newHyperlink("Ctrl+click to open :", "Emoji list", "https://emojiterra.com/", "List of compatible emojis")
+                 emojiLink.style.marginLeft = "80%"
+ 
+                 saveEmojiBox.appendChild(emojiLink)
+                 settings.appendChild(saveEmojiBox)
  
                  return settings
              }
