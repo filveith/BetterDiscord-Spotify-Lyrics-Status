@@ -53,7 +53,7 @@
              req.onload = () => {
                  let err = Status.strerror(req);
                  if (err != undefined)
-                     BDFDB.NotificationUtils.toast(`Animated Status: Error: ${err}`, { type: "error" });
+                     BDFDB.NotificationUtils.toast(`Status change error : ${err}`, { type: "error" });
              };
              return req;
          },
@@ -130,8 +130,8 @@
          },
      };
  
-     
-     var currentLyrics, cleared = false, oldSong = " "
+ 
+     var currentLyrics, cleared = false, oldSong = " ", oldLyrics, noLyricsClear, noLyricsYet
  
      return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
          getName() { return config.info.name; }
@@ -199,10 +199,7 @@
                              Status.set(noMusicData == "" ? Status.unset() : noMusicData);
                              cleared = true;
                          }
-                     } catch (error) {
-                         //SocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
-                         BDFDB.NotificationUtils.toast("ON START GET TOKEN error =" + error)
-                     }
+                     } catch (error) { }
                  }, 1000);
              }
  
@@ -219,7 +216,7 @@
                  return BdApi.getData(this.getName(), key);
              }
  
-             request(socket="") {
+             request(socket = "") {
                  return new Promise(callback => {
                      BDFDB.LibraryRequires.request({
                          url: 'https://api.spotify.com/v1/me/player/currently-playing',
@@ -272,16 +269,30 @@
                                  var eEmoji = this.getData("eEmoji")
  
                                  //CHANGES THE STATUS TO THE CURRENT LYRICS
-                                 Status.set(sEmoji + " " + currentLyrics[currentPositionLyrics].lyrics + " " + eEmoji);
+                                 var newLyrics = currentLyrics[currentPositionLyrics].lyrics
+                                 if (newLyrics != oldLyrics) {
+                                     noLyricsClear = false
+                                     noLyricsYet = false
+                                     oldLyrics = newLyrics
+                                     Status.set(sEmoji + " " + newLyrics + " " + eEmoji);
+                                 }
  
                              } catch (error) {
                                  if (error == "TypeError: Failed to fetch") {
+ 
                                      //NO LYRICS AVAILABLE
-                                     var noLyricsData = this.getData("noLyrics")
-                                     Status.set(noLyricsData == "" ? Status.unset() : noLyricsData);
+                                     if (!noLyricsClear) {
+                                         noLyricsClear = true
+                                         var noLyricsData = this.getData("noLyrics")
+                                         Status.set(noLyricsData == "" ? Status.unset() : noLyricsData);
+                                     }
+ 
                                  } else {
                                      //NO LYRICS AT THIS POINT IN THE SONG
-                                     Status.unset()
+                                     if (!noLyricsYet) {
+                                         noLyricsYet = true
+                                         Status.unset()
+                                     }
                                  }
                              }
                          }
@@ -363,6 +374,8 @@
                          this.setData("noMusic", noMusicBox.value)
                          this.setData("noLyrics", noLyricsBox.value)
                          BdApi.showToast("Settings were saved!", { type: "success" });
+                         noLyricsClear = false
+                         noLyricsYet = false
                      } catch (error) {
                          BdApi.showToast("Error while saving!", { type: "error" });
                      }
