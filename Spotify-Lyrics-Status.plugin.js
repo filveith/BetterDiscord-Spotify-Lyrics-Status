@@ -253,6 +253,8 @@
                                      //GET A JSON FILE WITH THE LYRICS FROM textyl.com
                                      currentLyrics = (await (await fetch(url)).json());
                                      oldSong = requestResult.item.id;
+                                     noLyricsClear = false
+                                     noLyricsYet = false
                                  }
  
                                  //GET THE CURRENT POSITION IN THE SONG
@@ -271,8 +273,6 @@
                                  //CHANGES THE STATUS TO THE CURRENT LYRICS
                                  var newLyrics = currentLyrics[currentPositionLyrics].lyrics
                                  if (newLyrics != oldLyrics) {
-                                     noLyricsClear = false
-                                     noLyricsYet = false
                                      oldLyrics = newLyrics
                                      Status.set(sEmoji + " " + newLyrics + " " + eEmoji);
                                  }
