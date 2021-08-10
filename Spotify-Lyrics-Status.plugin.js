@@ -1,28 +1,29 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Robin & Fil & Tom
- * @version 0.1.7
+ * @version 0.1.9
  * @description Change your status to the lyrics of the music you a listening to on spotify
  * @website https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status/blob/master/Spotify-Lyrics-Status.plugin.js
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
- const { getDefaultSettings } = require("http2");
+ const { type } = require("os");
 
  module.exports = (_ => {
      const config = {
          "info": {
              "name": "Spotify-Lyrics-Status",
              "author": "Robin & Fil & Tom",
-             "version": "0.1.7",
+             "version": "0.1.9",
              "description": "Change your discord status to the lyrics of the music your a listening to on Spotify",
              "github": "https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status",
              "github_raw": "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js"
          },
          "changeLog": {
              "improved": {
-                 "Added": "You can choose the emojis and default status"
+                 "Added": "You can choose the emojis and default status",
+                 "Fixed": "Plugin crashes on startup"
              }
          }
      };
@@ -91,14 +92,6 @@
              return divider;
          },
  
-         newTextarea: () => {
-             let textarea = document.createElement("textarea");
-             textarea.className = "input-cIJ7To scrollbarGhostHairline-1mSOM1";
-             textarea.style.resize = "vertical";
-             textarea.rows = 4;
-             return textarea;
-         },
- 
          newButton: (text, filled = true) => {
              let button = document.createElement("button");
              button.className = "button-38aScr colorBrand-3pXr91 sizeSmall-2cSMqn grow-q77ONN";
@@ -115,7 +108,7 @@
              return hbox;
          },
  
-         newHyperlink: (mainText="", linkText, url, hover = "") => {
+         newHyperlink: (mainText = "", linkText, url, hover = "") => {
              let linkTextE = document.createElement("a");
              linkTextE.style.display = "flex";
              linkTextE.style.flexDirection = "row";
@@ -130,24 +123,14 @@
              return mainTextE;
          },
  
-         setExpand: (element, value) => {
-             element.style.flexGrow = value;
-             return element;
-         },
- 
          setSuggested: (element, value = true) => {
              if (value) element.classList.add("colorGreen-29iAKY");
              else element.classList.remove("mystyle");
              return element;
          },
- 
-         setDestructive: (element, value = true) => {
-             if (value) element.classList.add("colorRed-1TFJan");
-             else element.classList.remove("colorRed-1TFJan");
-             return element;
-         }
      };
  
+     
      var currentLyrics, cleared = false, oldSong = " "
  
      return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
@@ -198,28 +181,28 @@
  
                  try {
                      if (typeof (this.getData("sEmoji")) == "undefined") {
-                         BDFDB.NotificationUtils.toast("NO FILE")
                          this.setData("sEmoji", "🎵")
                          this.setData("eEmoji", "🎵")
                          this.setData("noMusic", "")
                          this.setData("noLyrics", "")
                      }
-                 } catch (error) {
- 
-                 }
+                 } catch (error) { BDFDB.NotificationUtils.toast("Error when writing the file, error : " + error) }
  
                  this.interval = setInterval(() => {
                      try {
                          let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
                          if (song) {
                              cleared = false
-                             this.getSpotifyToken();
+                             this.request();
                          } else if (!song && !cleared) {
                              var noMusicData = this.getData("noMusic")
                              Status.set(noMusicData == "" ? Status.unset() : noMusicData);
                              cleared = true;
                          }
-                     } catch (error) { }
+                     } catch (error) {
+                         //SocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
+                         BDFDB.NotificationUtils.toast("ON START GET TOKEN error =" + error)
+                     }
                  }, 1000);
              }
  
@@ -236,8 +219,7 @@
                  return BdApi.getData(this.getName(), key);
              }
  
-             getSpotifyToken() {
- 
+             request(socket="") {
                  return new Promise(callback => {
                      BDFDB.LibraryRequires.request({
                          url: 'https://api.spotify.com/v1/me/player/currently-playing',
@@ -248,9 +230,17 @@
                      }, (error, response, result) => {
  
                          if (response && response.statusCode == 401) {
-                             BDFDB.LibraryModules.SpotifyUtils.getAccessToken(socket.accountId).then(promiseResult => {
+                             BDFDB.LibraryModules.SpotifyUtils.getAccessToken(socket.accountId).then(promiseResult => { //socket.acountID incoonu
                                  let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
+                                 this.request(newSocketDevice.socket).then(_ => {
+                                     try { callback(JSON.parse(result)); }
+                                     catch (err) { callback({}); }
+                                 });
                              });
+                         }
+                         else {
+                             try { callback(JSON.parse(result)); }
+                             catch (err) { callback({}); }
                          }
  
                          const getLyrics = async () => {
@@ -298,6 +288,7 @@
                          getLyrics();
                      });
                  })
+ 
              }
  
              getSettingsPanel(collapseStates = {}) {
@@ -379,7 +370,7 @@
  
                  let saveEmojiBox = GUI.newHBox()
                  saveEmojiBox.appendChild(saveButton)
-                 
+ 
                  let emojiLink = GUI.newHyperlink("Ctrl+click to open :", "Emoji list", "https://emojiterra.com/", "List of compatible emojis")
                  emojiLink.style.marginLeft = "80%"
  
