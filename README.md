@@ -1,6 +1,6 @@
 # BetterDiscord-Spotify-Lyrics-Status [deprecated]
 
-!!! The plugin is deprecated for the moment beacause the API I was using got shutdown and I have no answer from the owner for the moment !!!
+## The plugin is deprecated for the moment because the API I was using got shutdown and I have no answer from the owner for the moment
 
 
 Plugin for BetterDiscord. 
