@@ -1,8 +1,10 @@
-# BetterDiscord-Spotify-Lyrics-Status [deprecated]
+# BetterDiscord-Spotify-Lyrics-Status
 
-## The plugin is deprecated for the moment because the API I was using got shutdown and I have no answer from the owner for the moment
+## The plugin is BACK !
 
 
 Plugin for BetterDiscord. 
-This plugin syncronises your Discord status message with your Spotify song lyrics in real time.
+This plugin synchronizes your Discord status message with the lyrics of the song you are currently listening to on Spotify in real time kinda like a karakoe.
 ❗ MUST HAVE SPOTIFY CONNECTED TO DISCORD ❗
+
+![Spotify](Spotify.gif)
