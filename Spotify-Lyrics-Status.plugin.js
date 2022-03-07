@@ -50,8 +50,10 @@ module.exports = (_ => {
             req.setRequestHeader("content-type", "application/json");
             req.onload = () => {
                 let err = Status.strerror(req);
-                if (err != undefined);
-                BdApi.showToast(`Status Error: ${err}`, { type: "error" });
+                //Ignore the undefined error and the 'Could not interpret {} as a string' error
+                if (err != undefined && err[0] != 'C') {
+                    BdApi.showToast(`Status Error: ${err}`, { type: "error" });
+                }
             };
             if (status === {}) status = null;
             req.send(JSON.stringify({ custom_status: status }));
@@ -251,6 +253,7 @@ module.exports = (_ => {
 
                             // Get the lyrics of the song currently playing (Is called only at the start of the song)
                             if (requestResult.item.id != oldSong) {
+                                Status.Set()
 
                                 BDFDB.LibraryRequires.request({
                                     url: url,
