@@ -35,7 +35,7 @@ module.exports = (_ => {
             let json = JSON.parse(req.response);
             for (const s of["errors", "custom_status", "text", "_errors", 0, "message"])
                 if ((json == undefined) || ((json = json[s]) == undefined))
-                    return "Unknown error. Please report at github.com/toluschr/BetterDiscord-Animated-Status";
+                    return "Unknown error. Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot";
 
             return json;
         },
@@ -50,8 +50,8 @@ module.exports = (_ => {
             req.setRequestHeader("content-type", "application/json");
             req.onload = () => {
                 let err = Status.strerror(req);
-                // if (err != undefined);
-                // BdApi.showToast(`Animated Status: Error: ${err}`, { type: "error" });
+                if (err != undefined);
+                BdApi.showToast(`Status Error: ${err}`, { type: "error" });
             };
             if (status === {}) status = null;
             req.send(JSON.stringify({ custom_status: status }));
