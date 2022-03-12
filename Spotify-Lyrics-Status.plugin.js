@@ -7,7 +7,7 @@
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
- module.exports = (_ => {
+module.exports = (_ => {
     const config = {
         "info": {
             "name": "Spotify-Lyrics-Status",
@@ -121,7 +121,7 @@
         },
     };
 
-    var currentLyrics, cleared = false,
+    let currentLyrics, cleared = false,
         oldSong = " ",
         oldLyrics, noLyricsYet = false
 
@@ -165,7 +165,7 @@
         }
     } : (([Plugin, BDFDB]) => {
 
-        return class SpotifyToken extends Plugin {
+        return class Spotify_Lyrics_Status extends Plugin {
 
             onLoad() {
                 // Get the discord token
@@ -198,7 +198,7 @@
                             cleared = false
                             this.request(socket);
                         } else if (!song && !cleared) {
-                            var noMusicData = this.getData("noMusic")
+                            let noMusicData = this.getData("noMusic")
                             Status.Set(noMusicData == "" ? Status.Set() : noMusicData);
                             cleared = true;
                         }
@@ -207,8 +207,12 @@
             }
 
             onStop() {
+                this.setData('STOP', 1)
+
                 Status.Set()
                 clearInterval(this.interval);
+                this.setData('STOP', new Date())
+
             }
 
             setData(key, value) {
@@ -231,7 +235,7 @@
                     }, (error, response, result) => {
                         // If the users Spotify Token is expired get a new one
                         if (response && response.statusCode == 401) {
-                            BDFDB.LibraryModules.SpotifyUtils.getAccessToken(socket.accountId).then(promiseResult => { //socket.accountID unknown
+                            BDFDB.LibraryModules.SpotifyUtils.getAccessToken(socket.accountId).then(promiseResult => {
                                 let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
                                 this.request(newSocketDevice.socket).then(_ => {
                                     try { callback(JSON.parse(result)); } catch (err) { callback({}); }
@@ -244,12 +248,18 @@
 
                         try {
 
-                            var requestResult = JSON.parse(result)
-                            var songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
-                            var artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
-                            var url = ('https://api.textyl.co/api/lyrics?q=' + artistNameFormated + '%20' + songNameFormated)
-                            var currentTimeInSong, currentPositionLyrics
+                            this.setData('format', 1)
 
+                            let requestResult = JSON.parse(result)
+                            let songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
+                            let artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
+                            let url = ('https://api.textyl.co/api/lyrics?q=' + artistNameFormated + '%20' + songNameFormated)
+                            let currentTimeInSong, currentPositionLyrics
+
+                            this.setData('format', new Date())
+
+
+                            this.setData('before_fetch', 1)
 
                             // Get the lyrics of the song currently playing (Is called only at the start of the song)
                             if (requestResult.item.id != oldSong) {
@@ -264,8 +274,13 @@
                                 }, (error, response, lyrics) => {
 
                                     if (response.statusCode == 200) {
+                                        this.setData('in_if_fetch_before', 1)
+
                                         currentLyrics = JSON.parse(lyrics);
+                                        this.setData('in_if_fetch_after', 2)
+
                                     } else {
+                                        this.setData('in_else_fetch', 1)
                                         Status.Set()
                                         currentLyrics = {}
                                     }
@@ -276,9 +291,13 @@
                                 noLyricsYet = false
                             }
 
+                            this.setData('before_fetch', new Date())
+
 
                             //GET THE CURRENT POSITION IN THE SONG
                             currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
+
+                            this.setData('sync', 1)
 
                             // Syncronize the song with the lyrics
                             for (let checkSeconds = 0; checkSeconds < currentLyrics.length; checkSeconds++) {
@@ -287,24 +306,37 @@
                                 }
                             }
 
+                            this.setData('sync', new Date())
+
+
+                            this.setData('set_lyrics', 1)
+
+
                             //GETs THE SAVED EMOJIS FROM THE JSON FILE
-                            var sEmoji = this.getData("sEmoji")
-                            var eEmoji = this.getData("eEmoji")
+                            let sEmoji = this.getData("sEmoji")
+                            let eEmoji = this.getData("eEmoji")
 
                             //CHANGES THE STATUS TO THE CURRENT LYRICS
-                            var newLyrics = currentLyrics[currentPositionLyrics].lyrics
+                            let newLyrics = currentLyrics[currentPositionLyrics].lyrics
                             if (newLyrics != oldLyrics) {
                                 oldLyrics = newLyrics
                                 Status.Set(sEmoji + " " + newLyrics + " " + eEmoji);
                             }
 
+                            this.setData('set_lyrics', new Date())
+
+
                         } catch (error) {
+                            this.setData('crash', 1)
+
                             //NO LYRICS AT THIS POINT IN THE SONG
                             if (!noLyricsYet) {
                                 noLyricsYet = true
-                                var lyricsComing = this.getData("noLyrics")
+                                let lyricsComing = this.getData("noLyrics")
                                 Status.Set(lyricsComing == "" ? Status.Set() : lyricsComing);
                             }
+                            this.setData('crash', new Date())
+
                         }
                     });
                 })
