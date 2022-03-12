@@ -13,7 +13,7 @@ module.exports = (_ => {
             "name": "Spotify-Lyrics-Status",
             "author": "Skitzuuu & HatersGonnaHate",
             "version": "2.0.2",
-            "description": "Change your discord status to the lyrics of the music your a listening to on Spotify",
+            "description": "Change your discord status to the lyrics of the music you a listening to on Spotify",
             "rawUrl": "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/main/Spotify-Lyrics-Status.plugin.js"
         },
         "changeLog": {
