@@ -4,7 +4,7 @@
  * @version 2.0.3
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
- * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/main/Spotify-Lyrics-Status.plugin.js
  */
 
 module.exports = (_ => {
