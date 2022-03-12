@@ -303,7 +303,6 @@ module.exports = (_ => {
 
                             } else {
                                 Status.Set(this.getData("noLyrics"))
-                                BdApi.showToast("Japanes title", { type: "success" });
                             }
 
 
