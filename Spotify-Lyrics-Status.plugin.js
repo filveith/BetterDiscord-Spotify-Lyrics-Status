@@ -1,7 +1,7 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Skitzuuu & HatersGonnaHate
- * @version 2.0.0
+ * @version 2.0.1
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
@@ -14,12 +14,12 @@ module.exports = (_ => {
         "info": {
             "name": "Spotify-Lyrics-Status",
             "author": "Skitzuuu & HatersGonnaHate",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "description": "Change your discord status to the lyrics of the music your a listening to on Spotify"
         },
         "changeLog": {
             "improved": {
-                "Fixed": "Everything, it just works :)"
+                "Fixed": "Non-Latin song titles no longer crash discord"
             }
         }
     };
