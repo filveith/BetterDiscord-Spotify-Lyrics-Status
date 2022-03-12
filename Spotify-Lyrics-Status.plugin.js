@@ -307,7 +307,6 @@ module.exports = (_ => {
 
 
                         } catch (error) {
-                            this.setData('crash', 1)
 
                             //NO LYRICS AT THIS POINT IN THE SONG
                             if (!noLyricsYet) {
@@ -315,8 +314,6 @@ module.exports = (_ => {
                                 let lyricsComing = this.getData("noLyrics")
                                 Status.Set(lyricsComing == "" ? Status.Set() : lyricsComing);
                             }
-                            this.setData('crash', new Date())
-
                         }
                     });
                 })
