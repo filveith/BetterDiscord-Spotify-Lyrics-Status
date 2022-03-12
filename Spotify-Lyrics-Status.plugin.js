@@ -1,21 +1,20 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Skitzuuu & HatersGonnaHate
- * @version 2.0.1
+ * @version 2.0.2
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
-
-const { throws } = require("assert");
 
 module.exports = (_ => {
     const config = {
         "info": {
             "name": "Spotify-Lyrics-Status",
             "author": "Skitzuuu & HatersGonnaHate",
-            "version": "2.0.1",
-            "description": "Change your discord status to the lyrics of the music your a listening to on Spotify"
+            "version": "2.0.2",
+            "description": "Change your discord status to the lyrics of the music your a listening to on Spotify",
+            "rawUrl": "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/main/Spotify-Lyrics-Status.plugin.js"
         },
         "changeLog": {
             "improved": {
@@ -170,7 +169,8 @@ module.exports = (_ => {
         return class Spotify_Lyrics_Status extends Plugin {
 
             onLoad() {
-                // Get the discord token
+                BDFDB.PluginUtils.downloadUpdate(config.info.name, config.info.updateUrl)
+                    // Get the discord token
                 Status.authToken = BdApi.findModule(m => m.default && m.default.getToken).default.getToken();
             }
 
