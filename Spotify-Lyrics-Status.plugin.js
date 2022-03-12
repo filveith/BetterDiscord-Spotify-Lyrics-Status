@@ -22,7 +22,7 @@
         }
     };
 
-    /* Status API */
+    /* Status API imported from Animated-Status*/
     const Status = {
 
         authToken: '',
@@ -42,9 +42,7 @@
 
 
         Set: async(status) => {
-            if (!status) {
-                status = { text: status }
-            }
+            status = { text: status }
 
             let req = new XMLHttpRequest();
             req.open("PATCH", "/api/v9/users/@me/settings", true);
