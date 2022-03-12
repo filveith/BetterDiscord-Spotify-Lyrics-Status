@@ -7,6 +7,8 @@
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
+const { throws } = require("assert");
+
 module.exports = (_ => {
     const config = {
         "info": {
@@ -50,8 +52,8 @@ module.exports = (_ => {
             req.setRequestHeader("content-type", "application/json");
             req.onload = () => {
                 let err = Status.strerror(req);
-                // Ignore error when it is undefined or "Could not interpret {} as string"
-                if (err != undefined && err[0] === 'C') {
+                // Ignore error when it is undefined or 'Could not interpret "{}" as string'
+                if (err != undefined && err != 'Could not interpret "{}" as string.') {
                     BdApi.showToast(`Status Error: ${err}`, { type: "error" });
                 }
             };
@@ -187,7 +189,7 @@ module.exports = (_ => {
                         this.setData("noMusic", "")
                         this.setData("noLyrics", "")
                     }
-                } catch (error) { BDFDB.NotificationUtils.toast("Error when writing the file, error : " + error) }
+                } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot error : " + error) }
 
                 //The loop for the entire program
                 this.interval = setInterval(() => {
@@ -207,12 +209,8 @@ module.exports = (_ => {
             }
 
             onStop() {
-                this.setData('STOP', 1)
-
                 Status.Set()
                 clearInterval(this.interval);
-                this.setData('STOP', new Date())
-
             }
 
             setData(key, value) {
@@ -248,82 +246,65 @@ module.exports = (_ => {
 
                         try {
 
-                            this.setData('format', 1)
-
                             let requestResult = JSON.parse(result)
                             let songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
                             let artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
-                            let url = ('https://api.textyl.co/api/lyrics?q=' + artistNameFormated + '%20' + songNameFormated)
+                            let url = (`https://api.textyl.co/api/lyrics?q=${artistNameFormated}%20${songNameFormated}`)
                             let currentTimeInSong, currentPositionLyrics
 
-                            this.setData('format', new Date())
+                            // Check if the title is written in non-Latin characters, if yes we don't show the lyrics because it will crash the plugin (We don't know why)
+                            if (!songNameFormated.match(/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/)) {
 
+                                // Get the lyrics of the song currently playing (Is called only at the start of the song)
+                                if (requestResult.item.id != oldSong) {
+                                    Status.Set()
 
-                            this.setData('before_fetch', 1)
+                                    BDFDB.LibraryRequires.request({
+                                        url: url,
+                                        method: "GET",
+                                        headers: {
+                                            "content-type": "application/json"
+                                        }
+                                    }, (error, response, lyrics) => {
 
-                            // Get the lyrics of the song currently playing (Is called only at the start of the song)
-                            if (requestResult.item.id != oldSong) {
-                                Status.Set()
+                                        if (response.statusCode == 200) {
+                                            currentLyrics = JSON.parse(lyrics);
+                                        } else {
+                                            Status.Set()
+                                            currentLyrics = {}
+                                        }
 
-                                BDFDB.LibraryRequires.request({
-                                    url: url,
-                                    method: "GET",
-                                    headers: {
-                                        "content-type": "application/json"
-                                    }
-                                }, (error, response, lyrics) => {
+                                    })
 
-                                    if (response.statusCode == 200) {
-                                        this.setData('in_if_fetch_before', 1)
-
-                                        currentLyrics = JSON.parse(lyrics);
-                                        this.setData('in_if_fetch_after', 2)
-
-                                    } else {
-                                        this.setData('in_else_fetch', 1)
-                                        Status.Set()
-                                        currentLyrics = {}
-                                    }
-
-                                })
-
-                                oldSong = requestResult.item.id;
-                                noLyricsYet = false
-                            }
-
-                            this.setData('before_fetch', new Date())
-
-
-                            //GET THE CURRENT POSITION IN THE SONG
-                            currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
-
-                            this.setData('sync', 1)
-
-                            // Syncronize the song with the lyrics
-                            for (let checkSeconds = 0; checkSeconds < currentLyrics.length; checkSeconds++) {
-                                if ((currentLyrics[checkSeconds].seconds) <= (currentTimeInSong)) {
-                                    currentPositionLyrics = checkSeconds
+                                    oldSong = requestResult.item.id;
+                                    noLyricsYet = false
                                 }
+
+                                //GET THE CURRENT POSITION IN THE SONG
+                                currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
+
+                                // Syncronize the song with the lyrics
+                                for (let checkSeconds = 0; checkSeconds < currentLyrics.length; checkSeconds++) {
+                                    if ((currentLyrics[checkSeconds].seconds) <= (currentTimeInSong)) {
+                                        currentPositionLyrics = checkSeconds
+                                    }
+                                }
+
+                                //GETs THE SAVED EMOJIS FROM THE JSON FILE
+                                let sEmoji = this.getData("sEmoji")
+                                let eEmoji = this.getData("eEmoji")
+
+                                //CHANGES THE STATUS TO THE CURRENT LYRICS
+                                let newLyrics = currentLyrics[currentPositionLyrics].lyrics
+                                if (newLyrics != oldLyrics) {
+                                    oldLyrics = newLyrics
+                                    Status.Set(sEmoji + " " + newLyrics + " " + eEmoji);
+                                }
+
+                            } else {
+                                Status.Set(this.getData("noLyrics"))
+                                BdApi.showToast("Japanes title", { type: "success" });
                             }
-
-                            this.setData('sync', new Date())
-
-
-                            this.setData('set_lyrics', 1)
-
-
-                            //GETs THE SAVED EMOJIS FROM THE JSON FILE
-                            let sEmoji = this.getData("sEmoji")
-                            let eEmoji = this.getData("eEmoji")
-
-                            //CHANGES THE STATUS TO THE CURRENT LYRICS
-                            let newLyrics = currentLyrics[currentPositionLyrics].lyrics
-                            if (newLyrics != oldLyrics) {
-                                oldLyrics = newLyrics
-                                Status.Set(sEmoji + " " + newLyrics + " " + eEmoji);
-                            }
-
-                            this.setData('set_lyrics', new Date())
 
 
                         } catch (error) {
