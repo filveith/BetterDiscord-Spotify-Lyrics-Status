@@ -18,7 +18,7 @@ module.exports = (_ => {
         },
         "changeLog": {
             "improved": {
-                "Fixed": "Non-Latin song titles no longer crash discord"
+                "Fixed": "Auto update added"
             }
         }
     };
