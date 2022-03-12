@@ -42,7 +42,9 @@
 
 
         Set: async(status) => {
-            status = { text: status }
+            if (!status) {
+                status = { text: status }
+            }
 
             let req = new XMLHttpRequest();
             req.open("PATCH", "/api/v9/users/@me/settings", true);
@@ -50,9 +52,10 @@
             req.setRequestHeader("content-type", "application/json");
             req.onload = () => {
                 let err = Status.strerror(req);
-                BdApi.showToast(`BEFRE Error: ${typeof err}`, { type: "error" });
-                if (err != undefined);
-                BdApi.showToast(`Status Error: ${err}`, { type: "error" });
+                // Ignore error when it is undefined or "Could not interpret {} as string"
+                if (err != undefined && err[0] === 'C') {
+                    BdApi.showToast(`Status Error: ${err}`, { type: "error" });
+                }
             };
             if (status === {}) status = null;
             req.send(JSON.stringify({ custom_status: status }));
