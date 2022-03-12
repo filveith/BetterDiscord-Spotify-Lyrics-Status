@@ -251,6 +251,7 @@ module.exports = (_ => {
 
                             // Get the lyrics of the song currently playing (Is called only at the start of the song)
                             if (requestResult.item.id != oldSong) {
+                                Status.Set()
 
                                 BDFDB.LibraryRequires.request({
                                     url: url,
@@ -270,7 +271,6 @@ module.exports = (_ => {
                                 })
 
                                 oldSong = requestResult.item.id;
-                                noLyricsClear = false
                                 noLyricsYet = false
                             }
 
@@ -306,8 +306,6 @@ module.exports = (_ => {
                         }
                     });
                 })
-
-
             }
 
             getSettingsPanel() {
@@ -382,7 +380,6 @@ module.exports = (_ => {
                         this.setData("noMusic", noMusicBox.value)
                         this.setData("noLyrics", noLyricsBox.value)
                         BdApi.showToast("Settings were saved!", { type: "success" });
-                        noLyricsClear = false
                         noLyricsYet = false
                     } catch (error) {
                         BdApi.showToast("Error while saving!", { type: "error" });
