@@ -8,15 +8,18 @@ This plugin synchronizes your Discord status message with the lyrics of the song
 
 ![Spotify](https://cdn.discordapp.com/attachments/951036256316452894/976908931744014376/Spotify.gif)
 ## **Song example**
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1rgnBhdG2JDFTbYkYRZAku?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+Never Gonna Give You Up - Rick Astley
+https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT?si=ae323a90a1f94397
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3J34JtfZNylVXSKN4TDf12?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+Dance Monkey - Tones And I
+https://open.spotify.com/track/1rgnBhdG2JDFTbYkYRZAku?si=ea5fd02ad6cc406e
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0upFohXrGxIIAjyaJmCkMU?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+The Rumbling (SNK) - SiM
+https://open.spotify.com/track/0KCSJzsQVxkloxoT7dyrqV?si=b8c918881b3b4dc9
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0KCSJzsQVxkloxoT7dyrqV?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+Toxyo Drift - Teriyaki Boyz
+https://open.spotify.com/track/0upFohXrGxIIAjyaJmCkMU?si=c81682bc8c2c4a2c
 
 ## **How to install**
 
