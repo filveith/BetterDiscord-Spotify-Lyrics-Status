@@ -182,13 +182,17 @@ module.exports = (_ => {
 
                 // Check if a configuration file exists, if not create one with default data
                 try {
-                    if (typeof(this.getData("sEmoji")) == "undefined") {
+                    if (typeof(this.getData("sEmoji")) === undefined || 
+                        typeof(this.getData("eEmoji")) === undefined || 
+                        typeof(this.getData("noMusic")) === undefined || 
+                        typeof(this.getData("noLyrics")) === undefined
+                    ) {
                         this.setData("sEmoji", "🎵")
                         this.setData("eEmoji", "🎵")
                         this.setData("noMusic", "")
                         this.setData("noLyrics", "")
                     }
-                } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot error : " + error) }
+                } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error) }
 
                 //The loop for the entire program
                 this.interval = setInterval(() => {
@@ -288,8 +292,8 @@ module.exports = (_ => {
                             }
 
                             //GETs THE SAVED EMOJIS FROM THE JSON FILE
-                            let sEmoji = this.getData("sEmoji")
-                            let eEmoji = this.getData("eEmoji")
+                            let sEmoji = this.getData("sEmoji") ?? ""
+                            let eEmoji = this.getData("eEmoji") ?? ""
 
                             //CHANGES THE STATUS TO THE CURRENT LYRICS
                             let newLyrics = currentLyrics[currentPositionLyrics].lyrics
@@ -303,7 +307,7 @@ module.exports = (_ => {
                             //NO LYRICS AT THIS POINT IN THE SONG
                             if (!noLyricsYet) {
                                 noLyricsYet = true
-                                let lyricsComing = this.getData("noLyrics")
+                                let lyricsComing = this.getData("noLyrics") ?? ""
                                 Status.Set(lyricsComing == "" ? Status.Set() : lyricsComing);
                             }
                         }
