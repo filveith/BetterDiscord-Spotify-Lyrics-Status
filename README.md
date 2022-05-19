@@ -1,5 +1,7 @@
 # **BetterDiscord-Spotify-Lyrics-Status**
 
+❗ MUST HAVE SPOTIFY CONNECTED TO DISCORD ❗
+
 ## **The plugin is BACK !**
 
 Plugin for BetterDiscord.
