@@ -12,6 +12,9 @@ This plugin synchronizes your Discord status message with the lyrics of the song
 Never Gonna Give You Up - Rick Astley <br/>
 https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT?si=ae323a90a1f94397
 
+Desiigner - Freeze corleone
+https://open.spotify.com/track/50H3jnyW9MJRsdWRLsud79?si=ba0969ee98ef4a06
+
 Dance Monkey - Tones And I <br/>
 https://open.spotify.com/track/1rgnBhdG2JDFTbYkYRZAku?si=ea5fd02ad6cc406e
 
