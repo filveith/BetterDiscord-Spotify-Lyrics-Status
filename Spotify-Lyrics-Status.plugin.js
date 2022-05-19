@@ -246,65 +246,58 @@ module.exports = (_ => {
                         try {
 
                             let requestResult = JSON.parse(result)
-                            let songNameFormated = (requestResult.item.name).replace(/ /g, '%20')
-                            let artistNameFormated = (requestResult.item.album.artists[0].name).replace(/ /g, '%20')
-                            let url = (`https://api.textyl.co/api/lyrics?q=${artistNameFormated}%20${songNameFormated}`)
+                            let songNameFormated = requestResult.item.name
+                            let artistNameFormated = requestResult.item.album.artists[0].name
+                            let artistNameAndSongFormated = encodeURIComponent(`${artistNameFormated} ${songNameFormated}`)
+                            let url = (`https://api.textyl.co/api/lyrics?q=${artistNameAndSongFormated}`)
                             let currentTimeInSong, currentPositionLyrics
 
-                            // Check if the title is written in non-Latin characters, if yes we don't show the lyrics because it will crash the plugin (We don't know why)
-                            if (!songNameFormated.match(/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/)) {
+                            // Get the lyrics of the song currently playing (Is called only at the start of the song)
+                            if (requestResult.item.id != oldSong) {
+                                Status.Set()
 
-                                // Get the lyrics of the song currently playing (Is called only at the start of the song)
-                                if (requestResult.item.id != oldSong) {
-                                    Status.Set()
-
-                                    BDFDB.LibraryRequires.request({
-                                        url: url,
-                                        method: "GET",
-                                        headers: {
-                                            "content-type": "application/json"
-                                        }
-                                    }, (error, response, lyrics) => {
-
-                                        if (response.statusCode == 200) {
-                                            currentLyrics = JSON.parse(lyrics);
-                                        } else {
-                                            Status.Set()
-                                            currentLyrics = {}
-                                        }
-
-                                    })
-
-                                    oldSong = requestResult.item.id;
-                                    noLyricsYet = false
-                                }
-
-                                //GET THE CURRENT POSITION IN THE SONG
-                                currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
-
-                                // Syncronize the song with the lyrics
-                                for (let checkSeconds = 0; checkSeconds < currentLyrics.length; checkSeconds++) {
-                                    if ((currentLyrics[checkSeconds].seconds) <= (currentTimeInSong)) {
-                                        currentPositionLyrics = checkSeconds
+                                BDFDB.LibraryRequires.request({
+                                    url: url,
+                                    method: "GET",
+                                    headers: {
+                                        "content-type": "application/json"
                                     }
-                                }
+                                }, (error, response, lyrics) => {
 
-                                //GETs THE SAVED EMOJIS FROM THE JSON FILE
-                                let sEmoji = this.getData("sEmoji")
-                                let eEmoji = this.getData("eEmoji")
+                                    if (response.statusCode == 200) {
+                                        currentLyrics = JSON.parse(lyrics);
+                                    } else {
+                                        Status.Set()
+                                        currentLyrics = {}
+                                    }
 
-                                //CHANGES THE STATUS TO THE CURRENT LYRICS
-                                let newLyrics = currentLyrics[currentPositionLyrics].lyrics
-                                if (newLyrics != oldLyrics) {
-                                    oldLyrics = newLyrics
-                                    Status.Set(sEmoji + " " + newLyrics + " " + eEmoji);
-                                }
+                                })
 
-                            } else {
-                                Status.Set(this.getData("noLyrics"))
+                                oldSong = requestResult.item.id;
+                                noLyricsYet = false
                             }
 
+                            //GET THE CURRENT POSITION IN THE SONG
+                            currentTimeInSong = ((requestResult.progress_ms / 1000).toFixed());
 
+                            // Syncronize the song with the lyrics
+                            for (let checkSeconds = 0; checkSeconds < currentLyrics.length; checkSeconds++) {
+                                if ((currentLyrics[checkSeconds].seconds) <= (currentTimeInSong)) {
+                                    currentPositionLyrics = checkSeconds
+                                }
+                            }
+
+                            //GETs THE SAVED EMOJIS FROM THE JSON FILE
+                            let sEmoji = this.getData("sEmoji")
+                            let eEmoji = this.getData("eEmoji")
+
+                            //CHANGES THE STATUS TO THE CURRENT LYRICS
+                            let newLyrics = currentLyrics[currentPositionLyrics].lyrics
+                            if (newLyrics != oldLyrics) {
+                                oldLyrics = newLyrics
+                                Status.Set(sEmoji + " " + newLyrics + " " + eEmoji);
+                            }
+                            
                         } catch (error) {
 
                             //NO LYRICS AT THIS POINT IN THE SONG
