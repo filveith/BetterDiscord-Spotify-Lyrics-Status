@@ -25,16 +25,16 @@ https://open.spotify.com/track/0upFohXrGxIIAjyaJmCkMU?si=c81682bc8c2c4a2c
 
 1. First make sure you have better-discord installed if not go to this link https://betterdiscord.app and download it (Tutorial: [https://youtu.be/CP84aObEi9A?t=34](https://youtu.be/CP84aObEi9A?t=34))
 2. Download the plugin from this github repository
-    -  Click on the green button
+    -  **Click on the green button**
         
         ![Untitled](https://cdn.discordapp.com/attachments/951036256316452894/976908452574154822/Untitled.png)
         
-    - Download the zip file and save it in your download folder
+    - **Download the zip file and save it in your download folder**
         
         ![Untitled](https://cdn.discordapp.com/attachments/951036256316452894/976908452892901436/Untitled_1.png)
         
-    - Extract the zip file 
-    - Go into the folder and copy the Spotify-Lyrics-Status.plugin.js file with crtl + c
+    - **Extract the zip file** 
+    - **Go into the folder and copy the Spotify-Lyrics-Status.plugin.js file with crtl + c**
 3. Open discord and go into the settings scroll down to the better discord settings
 4. Click on the plugin setting
     
