@@ -6,9 +6,17 @@ Plugin for BetterDiscord.
 
 This plugin synchronizes your Discord status message with the lyrics of the song you are currently listening to on Spotify in real time kinda like a karaoke. <br/>
 
-❗ MUST HAVE SPOTIFY CONNECTED TO DISCORD ❗
-
 ![Spotify](https://cdn.discordapp.com/attachments/951036256316452894/976908931744014376/Spotify.gif)
+## **Song example**
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1rgnBhdG2JDFTbYkYRZAku?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3J34JtfZNylVXSKN4TDf12?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0upFohXrGxIIAjyaJmCkMU?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0KCSJzsQVxkloxoT7dyrqV?utm_source=generator" width="60%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 ## **How to install**
 
