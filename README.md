@@ -9,16 +9,16 @@ This plugin synchronizes your Discord status message with the lyrics of the song
 ![Spotify](https://cdn.discordapp.com/attachments/951036256316452894/976908931744014376/Spotify.gif)
 ## **Song example**
 
-Never Gonna Give You Up - Rick Astley
+Never Gonna Give You Up - Rick Astley <br/>
 https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT?si=ae323a90a1f94397
 
-Dance Monkey - Tones And I
+Dance Monkey - Tones And I <br/>
 https://open.spotify.com/track/1rgnBhdG2JDFTbYkYRZAku?si=ea5fd02ad6cc406e
 
-The Rumbling (SNK) - SiM
+The Rumbling (SNK) - SiM <br/>
 https://open.spotify.com/track/0KCSJzsQVxkloxoT7dyrqV?si=b8c918881b3b4dc9
 
-Toxyo Drift - Teriyaki Boyz
+Toxyo Drift - Teriyaki Boyz <br/>
 https://open.spotify.com/track/0upFohXrGxIIAjyaJmCkMU?si=c81682bc8c2c4a2c
 
 ## **How to install**
