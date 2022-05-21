@@ -8,6 +8,8 @@ Plugin for BetterDiscord.
 
 This plugin synchronizes your Discord status message with the lyrics of the song you are currently listening to on Spotify in real time kinda like a karaoke. <br/>
 
+❗ The music database is not the same as Spotify so some music may not have lyrics ❗ <br/>
+
 ![Spotify](https://cdn.discordapp.com/attachments/951036256316452894/976908931744014376/Spotify.gif)
 ## **Song example**
 
