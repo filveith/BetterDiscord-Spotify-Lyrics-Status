@@ -182,16 +182,10 @@ module.exports = (_ => {
 
                 // Check if a configuration file exists, if not create one with default data
                 try {
-                    if (typeof(this.getData("sEmoji")) === undefined || 
-                        typeof(this.getData("eEmoji")) === undefined || 
-                        typeof(this.getData("noMusic")) === undefined || 
-                        typeof(this.getData("noLyrics")) === undefined
-                    ) {
-                        this.setData("sEmoji", "🎵")
-                        this.setData("eEmoji", "🎵")
-                        this.setData("noMusic", "")
-                        this.setData("noLyrics", "")
-                    }
+                    if (typeof(this.getData("sEmoji")) === undefined) this.setData("sEmoji", "🎵")
+                    if (typeof(this.getData("eEmoji")) === undefined) this.setData("eEmoji", "🎵")
+                    if (typeof(this.getData("noMusic")) === undefined) this.setData("noMusic", "") 
+                    if ( typeof(this.getData("noLyrics")) === undefined) this.setData("noLyrics", "")
                 } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error) }
 
                 //The loop for the entire program
