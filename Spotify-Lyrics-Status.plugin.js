@@ -51,8 +51,8 @@ module.exports = (_ => {
             req.setRequestHeader("content-type", "application/json");
             req.onload = () => {
                 let err = Status.strerror(req);
-                // Ignore error when it is undefined or 'Could not interpret "{}" as string'
-                if (err != undefined && err != 'Could not interpret "{}" as string.') {
+                // Ignore error when it is undefined or message is 'Could not interpret "{}" as string'
+                if (err != undefined && err.includes('Could not') === false) {
                     BdApi.showToast(`Status Error: ${err}`, { type: "error" });
                 }
             };
