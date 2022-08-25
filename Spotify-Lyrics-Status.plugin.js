@@ -174,13 +174,15 @@ module.exports = (_ => {
             }
 
             onStart() {
+                BDFDB.NotificationUtils.toast("This is a dev version of Spotify-Lyrics-Status, this version may be unstable")
+                BDFDB.NotificationUtils.toast(this.getData('sEmoji') + " " + this.getData('eEmoji'))
                 // Get the discord token
                 Status.authToken = BdApi.findModule(m => m.default && m.default.getToken).default.getToken();
                 // Get the spotify token
                 let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
                 let socket = newSocketDevice.socket
 
-                // Check if a configuration file exists, if not create one with default data
+                // Check if a configuration file exists, if not create one with default data. Or reset to default if a value in the config file is undefined
                 try {
                     if (typeof(this.getData("sEmoji")) === undefined) this.setData("sEmoji", "🎵")
                     if (typeof(this.getData("eEmoji")) === undefined) this.setData("eEmoji", "🎵")
@@ -285,7 +287,7 @@ module.exports = (_ => {
                                 }
                             }
 
-                            //GETs THE SAVED EMOJIS FROM THE JSON FILE
+                            //GET THE SAVED EMOJIS FROM THE JSON FILE
                             let sEmoji = this.getData("sEmoji") ?? ""
                             let eEmoji = this.getData("eEmoji") ?? ""
 
@@ -327,14 +329,14 @@ module.exports = (_ => {
                 sEmojiBox.style.width = "11%";
                 emojiZone.appendChild(sEmojiBox);
 
-                let fakeLyrics = GUI.newLabel('Never gonna give you up...');
-                fakeLyrics.style.fontSize = "15px";
-                fakeLyrics.style.color = "white";
-                fakeLyrics.style.fontStyle = "italic";
-                fakeLyrics.style.marginLeft = "10px";
-                fakeLyrics.style.marginTop = "11px";
-                fakeLyrics.style.marginRight = "10px";
-                emojiZone.appendChild(fakeLyrics)
+                let exampleLyrics = GUI.newLabel('Never gonna give you up...');
+                exampleLyrics.style.fontSize = "15px";
+                exampleLyrics.style.color = "white";
+                exampleLyrics.style.fontStyle = "italic";
+                exampleLyrics.style.marginLeft = "10px";
+                exampleLyrics.style.marginTop = "11px";
+                exampleLyrics.style.marginRight = "10px";
+                emojiZone.appendChild(exampleLyrics)
 
                 //EMOJI AT THE END OF THE STATUS
                 let eEmojiBox = GUI.newInput();
