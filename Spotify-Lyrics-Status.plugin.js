@@ -1,10 +1,10 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Skitzuuu & HatersGonnaHate
- * @version 2.0.8
+ * @version 2.0.9
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
- * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js
  */
 
  module.exports = ((_) => {
@@ -12,14 +12,14 @@
 		info: {
 			name: "Spotify-Lyrics-Status",
 			author: "Skitzuuu & HatersGonnaHate",
-			version: "2.0.8",
+			version: "2.0.9",
 			description:
 				"Change your discord status to the lyrics of the music your a listening to on Spotify",
 		},
-		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js",
+		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js",
 		changeLog: {
 			improved: {
-				Fixed: "Settings corrupted after plugin update",
+				Fixed: "After updating the plugin the personal configuration was not working",
 			},
 		},
 	};
@@ -246,32 +246,46 @@
 						let socket = newSocketDevice.socket;
 						// Check if a configuration file exists, if not create one with default data. Or reset to default if a value in the config file is undefined
 						try {
-						    if (this.getData("sEmoji") === undefined) this.setData("sEmoji", "🎵")
-						    if (this.getData("eEmoji") === undefined) this.setData("eEmoji", "🎵")
-						    if (this.getData("noMusic") === undefined) this.setData("noMusic", "")
-						    if (this.getData("noLyrics") === undefined) this.setData("noLyrics", "")
+							if (this.getData("sEmoji") === undefined)
+								this.setData("sEmoji", "🎵");
+							if (this.getData("eEmoji") === undefined)
+								this.setData("eEmoji", "🎵");
+							if (this.getData("noMusic") === undefined)
+								this.setData("noMusic", "");
+							if (this.getData("noLyrics") === undefined)
+								this.setData("noLyrics", "");
 						} catch (error) {
-                            try {
-                                this.initData()
-                            } catch (error) {
-                                BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error)
-                            }
-                        }
+							try {
+								this.initData();
+							} catch (error) {
+								BDFDB.NotificationUtils.toast(
+									"Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " +
+										error
+								);
+							}
+						}
 
 						//The loop for the entire program
 						this.interval = setInterval(() => {
-						    try {
-						        let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
+							try {
+								let song =
+									BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(
+										false
+									);
 
-						        if (song) {
-						            cleared = false
-						            this.request(socket);
-						        } else if (!song && !cleared) {
-						            let noMusicData = this.getData("noMusic")
-						            Status.Set(noMusicData == "" ? Status.Set() : noMusicData);
-						            cleared = true;
-						        }
-						    } catch (error) {}
+								if (song) {
+									cleared = false;
+									this.request(socket);
+								} else if (!song && !cleared) {
+									let noMusicData = this.getData("noMusic");
+									Status.Set(
+										noMusicData == ""
+											? Status.Set()
+											: noMusicData
+									);
+									cleared = true;
+								}
+							} catch (error) {}
 						}, 1000);
 					}
 
@@ -280,51 +294,62 @@
 						clearInterval(this.interval);
 					}
 
-                    initData() {
-                        const data = {
-                            "all": {
-                                "sEmoji": "🎵",
-                                "eEmoji": "🎵",
-                                "noMusic": "",
-                                "noLyrics": ""
-                            }
-                        }
-                        BdApi.saveData(this.getName(), "all", data);
-                    }
-
-					setData(key, value) {
-						let startEmoji, endEmoji, noMusic, noLyrics;
-						switch (key) {
-							case "sEmoji":
-								startEmoji = value;
-								break;
-							case "eEmoji":
-								endEmoji = value;
-								break;
-							case "noMusic":
-								noMusic = value;
-								break;
-							case "noLyrics":
-								noLyrics = value;
-								break;
-							default:
-								break;
-						}
-						let data = {
-							sEmoji: startEmoji ?? (this.getData('sEmoji') ?? '🎵'),
-							eEmoji: endEmoji ?? (this.getData('eEmoji') ?? '🎵'),
-							noMusic: noMusic ?? (this.getData('noMusic') ?? ''),
-							noLyrics: noLyrics ?? (this.getData('noLyrics') ?? ''),
+					initData() {
+						const data = {
+							all: {
+								sEmoji: "🎵",
+								eEmoji: "🎵",
+								noMusic: "",
+								noLyrics: "",
+							},
 						};
 						BdApi.saveData(this.getName(), "all", data);
 					}
 
+					setData(key, value) {
+						try {
+							let startEmoji, endEmoji, noMusic, noLyrics;
+							switch (key) {
+								case "sEmoji":
+									startEmoji = value;
+									break;
+								case "eEmoji":
+									endEmoji = value;
+									break;
+								case "noMusic":
+									noMusic = value;
+									break;
+								case "noLyrics":
+									noLyrics = value;
+									break;
+								default:
+									break;
+							}
+							let data = {
+								sEmoji:
+									startEmoji ??
+									this.getData("sEmoji") ??
+									"🎵",
+								eEmoji:
+									endEmoji ?? this.getData("eEmoji") ?? "🎵",
+								noMusic:
+									noMusic ?? this.getData("noMusic") ?? "",
+								noLyrics:
+									noLyrics ?? this.getData("noLyrics") ?? "",
+							};
+							BdApi.saveData(this.getName(), "all", data);
+						} catch (error) {
+							this.initData();
+						}
+					}
+
 					getData(key) {
-                        try {
-                            return BdApi.loadData(this.getName(), "all")[key];
-                        } catch (error) {
-                            return ''
-                        }
+						try {
+							return BdApi.loadData(this.getName(), "all")[key];
+						} catch (error) {
+                            this.initData()
+							return "";
+						}
 					}
 
 					request(socket) {
