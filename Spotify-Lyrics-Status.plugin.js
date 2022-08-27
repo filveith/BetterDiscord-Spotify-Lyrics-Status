@@ -1,7 +1,7 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Skitzuuu & HatersGonnaHate
- * @version 2.0.10
+ * @version 2.0.11
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/main/Spotify-Lyrics-Status.plugin.js
@@ -12,7 +12,7 @@
 		info: {
 			name: "Spotify-Lyrics-Status",
 			author: "Skitzuuu & HatersGonnaHate",
-			version: "2.0.10",
+			version: "2.0.11",
 			description:
 				"Change your discord status to the lyrics of the music your a listening to on Spotify",
 		},
@@ -43,7 +43,7 @@
 				"message",
 			])
 				if (json == undefined || (json = json[s]) == undefined)
-					return "Unknown error. Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot";
+					return "Unknown error. Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot "+req.response;
 
 			return json;
 		},
