@@ -4,7 +4,7 @@
  * @version 2.0.8
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
- * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
  module.exports = ((_) => {
@@ -16,10 +16,10 @@
 			description:
 				"Change your discord status to the lyrics of the music your a listening to on Spotify",
 		},
-		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js",
+		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js",
 		changeLog: {
 			improved: {
-				Fixed: "After updating the plugin the personal configuration was not working",
+				Fixed: "Settings corrupted after plugin update",
 			},
 		},
 	};
@@ -236,14 +236,6 @@
 					}
 
 					onStart() {
-						BDFDB.NotificationUtils.toast(
-							"This is a dev version of Spotify-Lyrics-Status, this version may be unstable"
-						);
-						// BDFDB.NotificationUtils.toast(
-						// 	this.getData("sEmoji") +
-						// 		" " +
-						// 		this.getData("eEmoji")
-						// );
 						// Get the discord token
 						Status.authToken = BdApi.findModule(
 							(m) => m.default && m.default.getToken
@@ -253,25 +245,18 @@
 							BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
 						let socket = newSocketDevice.socket;
 						// Check if a configuration file exists, if not create one with default data. Or reset to default if a value in the config file is undefined
-						// console.log(
-						// 	this.getData("sEmoji") +
-						// 		" " +
-						// 		this.getData("eEmoji")
-						// );
 						try {
 						    if (this.getData("sEmoji") === undefined) this.setData("sEmoji", "🎵")
 						    if (this.getData("eEmoji") === undefined) this.setData("eEmoji", "🎵")
 						    if (this.getData("noMusic") === undefined) this.setData("noMusic", "")
 						    if (this.getData("noLyrics") === undefined) this.setData("noLyrics", "")
-						} catch (error) { 
-                            console.log('try catch',error);
+						} catch (error) {
                             try {
                                 this.initData()
                             } catch (error) {
                                 BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error)
                             }
                         }
-						console.log(this.getData('sEmoji') + " " + this.getData('eEmoji'))
 
 						//The loop for the entire program
 						this.interval = setInterval(() => {
@@ -338,7 +323,6 @@
                         try {
                             return BdApi.loadData(this.getName(), "all")[key];
                         } catch (error) {
-                            console.log('error get data',error);
                             return ''
                         }
 					}
