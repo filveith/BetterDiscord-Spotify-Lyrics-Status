@@ -7,7 +7,7 @@
  * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
  */
 
-module.exports = (_ => {
+ module.exports = (_ => {
     const config = {
         "info": {
             "name": "Spotify-Lyrics-Status",
@@ -181,30 +181,33 @@ module.exports = (_ => {
                 // Get the spotify token
                 let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
                 let socket = newSocketDevice.socket
-
                 // Check if a configuration file exists, if not create one with default data. Or reset to default if a value in the config file is undefined
-                try {
-                    if (typeof(this.getData("sEmoji")) === undefined) this.setData("sEmoji", "🎵")
-                    if (typeof(this.getData("eEmoji")) === undefined) this.setData("eEmoji", "🎵")
-                    if (typeof(this.getData("noMusic")) === undefined) this.setData("noMusic", "") 
-                    if ( typeof(this.getData("noLyrics")) === undefined) this.setData("noLyrics", "")
-                } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error) }
+                console.log(this.getData('sEmoji') + " " + this.getData('eEmoji'))
+                // console.log(BDFDB.settings.all.sEmoji + ' ???');
+			    // console.log(BdApi.loadData('sEmoji') + ' wdwd')
+                // try {
+                //     if (this.getData("sEmoji") === undefined) this.setData("sEmoji", "🎵")
+                //     if (this.getData("eEmoji") === undefined) this.setData("eEmoji", "🎵")
+                //     if (this.getData("noMusic") === undefined) this.setData("noMusic", "") 
+                //     if (this.getData("noLyrics") === undefined) this.setData("noLyrics", "")
+                // } catch (error) { BDFDB.NotificationUtils.toast("Error while writing to the config file, Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot \n error : " + error) }
+                // console.log(this.getData('sEmoji') + " " + this.getData('eEmoji'))
 
-                //The loop for the entire program
-                this.interval = setInterval(() => {
-                    try {
-                        let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
+                // //The loop for the entire program
+                // this.interval = setInterval(() => {
+                //     try {
+                //         let song = BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(false);
 
-                        if (song) {
-                            cleared = false
-                            this.request(socket);
-                        } else if (!song && !cleared) {
-                            let noMusicData = this.getData("noMusic")
-                            Status.Set(noMusicData == "" ? Status.Set() : noMusicData);
-                            cleared = true;
-                        }
-                    } catch (error) {}
-                }, 1000);
+                //         if (song) {
+                //             cleared = false
+                //             this.request(socket);
+                //         } else if (!song && !cleared) {
+                //             let noMusicData = this.getData("noMusic")
+                //             Status.Set(noMusicData == "" ? Status.Set() : noMusicData);
+                //             cleared = true;
+                //         }
+                //     } catch (error) {}
+                // }, 1000);
             }
 
             onStop() {
@@ -213,11 +216,18 @@ module.exports = (_ => {
             }
 
             setData(key, value) {
-                BdApi.setData(this.getName(), key, value);
+                console.log('Get data',key,value,this.getData(key));
+                console.log('Save data',key,value);
+                BdApi.saveData(this.getName(), key, value);
             }
 
             getData(key) {
-                return BdApi.getData(this.getName(), key);
+                console.log('----------------------\ngetData',key);
+                console.log('all data',BdApi.loadData(this.getName(),'all')['eEmoji']);
+                console.log('normalKey',key,BdApi.loadData(this.getName(), key));
+                let key2 = 'all.'+key 
+                console.log('newKey',key2,BdApi.loadData(this.getName(), key2));
+                return BdApi.loadData(this.getName(), 'all')[key];
             }
 
             request(socket) {
