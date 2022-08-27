@@ -1,10 +1,10 @@
 /**
  * @name Spotify-Lyrics-Status
  * @author Skitzuuu & HatersGonnaHate
- * @version 2.0.7
+ * @version 2.0.8
  * @description Change your discord status to the lyrics of the music your a listening to on Spotify
  * @source https://github.com/filveith/BetterDiscord-Spotify-Lyrics-Status
- * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js
  */
 
  module.exports = ((_) => {
@@ -12,14 +12,14 @@
 		info: {
 			name: "Spotify-Lyrics-Status",
 			author: "Skitzuuu & HatersGonnaHate",
-			version: "2.0.7",
+			version: "2.0.8",
 			description:
 				"Change your discord status to the lyrics of the music your a listening to on Spotify",
 		},
-		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/master/Spotify-Lyrics-Status.plugin.js",
+		rawUrl: "https://raw.githubusercontent.com/filveith/BetterDiscord-Spotify-Lyrics-Status/15-settings-are-undefined-after-update/Spotify-Lyrics-Status.plugin.js",
 		changeLog: {
 			improved: {
-				Fixed: "Plugin was not able to play music with non latin charaters",
+				Fixed: "After updating the plugin the personal configuration was not working",
 			},
 		},
 	};
