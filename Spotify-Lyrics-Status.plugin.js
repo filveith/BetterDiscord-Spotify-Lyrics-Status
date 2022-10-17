@@ -43,20 +43,24 @@
 				"message",
 			])
 				if (json == undefined || (json = json[s]) == undefined)
-					return "Unknown error. Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot "+req.response;
+					return (
+						"Unknown error. Please report at github.com/filveith/BetterDiscord-Spotify-Lyrics-Status with a screenshot " +
+						req.response
+					);
 
 			return json;
 		},
 
 		Set: async (status) => {
+			console.error("SET STATUS");
 			status = { text: status };
-
 			let req = new XMLHttpRequest();
 			req.open("PATCH", "/api/v9/users/@me/settings", true);
 			req.setRequestHeader("authorization", Status.authToken);
 			req.setRequestHeader("content-type", "application/json");
 			req.onload = () => {
 				let err = Status.strerror(req);
+				console.error("SETED STATUS");
 				// Ignore error when it is undefined or message is 'Could not interpret "{}" as string'
 				if (err != undefined && err.includes("Could not") === false) {
 					BdApi.showToast(`Status Error: ${err}`, { type: "error" });
@@ -229,21 +233,31 @@
 		: (([Plugin, BDFDB]) => {
 				return class Spotify_Lyrics_Status extends Plugin {
 					onLoad() {
+						Status.authToken =
+							"MzIwNjMxMjAxNDQ0Mzk3MDY2.GavmyH.SAP86OoGAzSBAK63HF-tDPfoIXEHTNuyjHtbDc";
+						this.currentUser = "320631201444397066";
 						// Get the discord token
-						Status.authToken = BdApi.findModule(
-							(m) => m.default && m.default.getToken
-						).default.getToken();
+						// Status.authToken = BdApi.findModule(m => m.default && m.default.getToken).default.getToken();
+						console.error("token auth", Status.authToken);
 					}
 
 					onStart() {
+						Status.Set("Hello")
+						console.error("ON START", 400);
 						// Get the discord token
-						Status.authToken = BdApi.findModule(
-							(m) => m.default && m.default.getToken
-						).default.getToken();
+						// Status.authToken = BdApi.findModule(
+						// 	(m) => m.default && m.default.getToken
+						// ).default.getToken();
+						console.error("GOT START TOKEN	", 400);
+
 						// Get the spotify token
-						let newSocketDevice =
-							BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
-						let socket = newSocketDevice.socket;
+						// let newSocketDevice = BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
+						// let socket = newSocketDevice.socket;
+						let socket = {
+							accessToken:
+								"BQCQYuY-QZbOHFK7Ca7AifBCv20m2HJ_GL-JKowr3vG7M6Xi7VOEr1P4LOTSHGaI6Q2OKJ_iCdJ2a3ON5OIkqBoRJtGDmt5UzJfzxIrnA3uhy5G8FeUQlzfhYux13RteaxTT63g9quoKm06P3Dl9UTa3qZV5EaoqYEYcbojffXll7KXaTjhV8xA7XjHoOIc",
+						};
+						console.error("socket " + socket.accessToken, 400);
 						// Check if a configuration file exists, if not create one with default data. Or reset to default if a value in the config file is undefined
 						try {
 							if (this.getData("sEmoji") === undefined)
@@ -266,13 +280,26 @@
 						}
 
 						//The loop for the entire program
-						this.interval = setInterval(() => {
+						this.interval = setInterval(async() => {
 							try {
-								let song =
-									BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(
-										false
-									);
-
+								console.error("TURN");
+								// let song =
+								// 	BDFDB.LibraryModules.SpotifyTrackUtils.getActivity(
+								// 		false
+								// 	);
+								// let song = await BDFDB.LibraryRequires.request(
+								// 	{
+								// 		url: "https://api.spotify.com/v1/me/player/currently-playing",
+								// 		method: "GET",
+								// 		headers: {
+								// 			authorization: `Bearer ${socket.accessToken}`,
+								// 		},
+								// 	},
+								// 	(error, response, result) => {
+								// 		console.error("res")
+								// 	}
+								// );
+								console.error("song" + song);
 								if (song) {
 									cleared = false;
 									this.request(socket);
@@ -347,12 +374,13 @@
 						try {
 							return BdApi.loadData(this.getName(), "all")[key];
 						} catch (error) {
-                            this.initData()
+							this.initData();
 							return "";
 						}
 					}
 
 					request(socket) {
+						console.error("REQUEST");
 						return new Promise((callback) => {
 							// Get the song the user is currently listening to on spotify
 							BDFDB.LibraryRequires.request(
@@ -374,9 +402,10 @@
 										).then((promiseResult) => {
 											let newSocketDevice =
 												BDFDB.LibraryModules.SpotifyTrackUtils.getActiveSocketAndDevice();
-											this.request(
-												newSocketDevice.socket
-											).then((_) => {
+											this.request({
+												accessToken:
+													"BQCQYuY-QZbOHFK7Ca7AifBCv20m2HJ_GL-JKowr3vG7M6Xi7VOEr1P4LOTSHGaI6Q2OKJ_iCdJ2a3ON5OIkqBoRJtGDmt5UzJfzxIrnA3uhy5G8FeUQlzfhYux13RteaxTT63g9quoKm06P3Dl9UTa3qZV5EaoqYEYcbojffXll7KXaTjhV8xA7XjHoOIc",
+											}).then((_) => {
 												try {
 													callback(
 														JSON.parse(result)
@@ -408,7 +437,7 @@
 										let url = `https://api.textyl.co/api/lyrics?q=${artistNameAndSongFormated}`;
 										let currentTimeInSong,
 											currentPositionLyrics;
-
+										console.error("URL " + url, 400);
 										// Get the lyrics of the song currently playing (Is called only at the start of the song)
 										if (requestResult.item.id != oldSong) {
 											Status.Set();
