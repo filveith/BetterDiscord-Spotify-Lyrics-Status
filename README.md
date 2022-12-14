@@ -1,8 +1,13 @@
-# **BetterDiscord-Spotify-Lyrics-Status**
+# **BetterDiscord-Spotify-Lyrics-Status** ❗❗❗ DEPRECATED ❗❗❗
+
+Sadly this plugin is now deprecated because the api used is not being maintained anymore.
+A fix would be to directly scrape the lyrics from spotify, but this solution would require additional programs to be downloaded. 
+
+Thanks to everyone that used the plugin, we had fun maintaining it !
+
+#
 
 ❗ MUST HAVE SPOTIFY CONNECTED TO DISCORD ❗
-
-## **The plugin is BACK !**
 
 Plugin for BetterDiscord.
 
